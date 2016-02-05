@@ -135,8 +135,25 @@ cmd_delete() {
 cmd_list() {
 	[[ $# -ne 0 ]] && die "Usage: $PROGRAM list"
 	local mount_points="$(sed -n "s:^/dev/mapper/${CT_MAPPER_PREFIX}[^ ]* \\([^ ]\\+\\).*:\\1:p" /proc/mounts)"
-	[[ -n $mount_points ]] && echo -e "$mount_points"
+	[[ -n $mount_points ]] && echo -e "$mount_points" && return 0
+	return 1
 }
+
+cmd_auto() {
+	if [[ $# -eq 0 ]]; then
+		cmd_list "$@" || cmd_usage
+	elif [[ $# -eq 1 ]]; then
+		initialize_container "$1"
+		if [[ -e $mapper_path ]]; then
+			cmd_close "$@"
+		else
+			cmd_open "$@"
+		fi
+	else
+		cmd_usage "$@"
+	fi
+}
+
 
 PROGRAM="$(basename "$0")"
 
@@ -149,6 +166,6 @@ case "$1" in
 	c|close) shift;			cmd_close "$@" ;;
 	l|list) shift;			cmd_list "$@" ;;
 	o|open) shift;			cmd_open "$@" ;;
-	*)				cmd_open "$@" ;;
+	*)				cmd_auto "$@" ;;
 esac
 exit 0

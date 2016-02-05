@@ -11,6 +11,8 @@
       ctmg close  container_path
       ctmg list
 
+Calling `ctmg` with no arguments will call `list` if there are any containers open, and otherwise show the usage screen. Calling `ctmg` with a filename argument will call `open` if it is not already open and otherwise will call `close`.
+
 ### Examples
 
 #### Create a 100MiB encrypted container called "example"
