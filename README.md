@@ -17,7 +17,7 @@ Calling `ctmg` with no arguments will call `list` if there are any containers op
 
 #### Create a 100MiB encrypted container called "example"
 
-    zx2c4@thinkpad ~ $ ctmg create example 100MiB
+    zx2c4@thinkpad ~ $ ctmg new example 100MiB
     [#] truncate -s 100MiB /home/zx2c4/example.ct
     [#] cryptsetup --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --batch-mode luksFormat /home/zx2c4/example.ct
     Enter passphrase:
@@ -32,7 +32,7 @@ Calling `ctmg` with no arguments will call `list` if there are any containers op
 
     zx2c4@thinkpad ~ $ ctmg open example
     [#] cryptsetup luksOpen /home/zx2c4/example.ct ct_example
-    Enter passphrase for /home/zx2c4/example.ct: 
+    Enter passphrase for /home/zx2c4/example.ct:
     [#] mkdir -p /home/zx2c4/example
     [#] mount /dev/mapper/ct_example /home/zx2c4/example
     [+] Opened /home/zx2c4/example.ct at /home/zx2c4/example
@@ -59,6 +59,6 @@ Report any bugs to <jason@zx2c4.com>.
 
 ### Security Considerations
 
-This runs as root and auto-`sudo`s itself to achieve that. As such, you shouldn't run this on paths you don't trust that could be controlled by malicious users.
+This runs as root and auto-`sudo`s itself to achieve that. As such, you shouldn't run this on paths you don't trust or paths that could be controlled by malicious users.
 
-Since `ctmg` uses `cryptseup` and the LUKS infrastructure, it uses the Linux block device encryption APIs. The state of the art in block device encryption, as of writing, is [XTS mode](http://csrc.nist.gov/publications/nistpubs/800-38E/nist-sp-800-38E.pdf), which is what `ctmg` uses. But do note that this does not guarantee, entirely, the integrity of data, just the secrecy. As such, if a malicious user is able to modify the encrypted content, it is possible this could result in differing decrypted content without you noticing. So, `ctmg` is useful for keeping things secret, but not for guaranteeing the authenticity of the data. If your laptop gets stolen, sleep safely knowing that your `ctmg`-secured data is safe, but if an attacker is actively modifying the `.ct` file while you're using it in one way or another, you've got trouble.
+Since `ctmg` uses `cryptsetup` and the LUKS infrastructure, it uses the Linux block device encryption APIs. The state of the art in block device encryption, as of writing, is [XTS mode](http://csrc.nist.gov/publications/nistpubs/800-38E/nist-sp-800-38E.pdf), which is what `ctmg` uses. But do note that this does not guarantee, entirely, the integrity of data, just the secrecy. As such, if a malicious user is able to modify the encrypted content, it is possible this could result in differing decrypted content without you noticing. So, `ctmg` is useful for keeping things secret, but not for guaranteeing the authenticity of the data. If your laptop gets stolen, sleep safely knowing that your `ctmg`-secured data is safe, but if an attacker is actively modifying the `.ct` file while you're using it in one way or another, you've got trouble.
