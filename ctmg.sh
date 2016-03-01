@@ -19,7 +19,7 @@ CT_FILE_SUFFIX=".ct"
 CT_MAPPER_PREFIX="ct_"
 
 trace() {
-	echo "[#] $@"
+	echo "[#] $*"
 	"$@"
 }
 
