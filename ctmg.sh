@@ -95,9 +95,9 @@ cmd_new() {
 	rm -f "$container_path"
 	trace truncate -s "$container_size" "$container_path" || { trace rm -f "$container_path"; die "Could not create $container_path"; }
 	trace cryptsetup --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --batch-mode luksFormat "$container_path" || { trace rm -f "$container_path"; die "Could not create LUKS volume on $container_path"; }
-	trace chown ${SUDO_UID:-0}:${SUDO_GID:-0} "$container_path" || { trace rm -f "$container_path"; die "Could not set ownership of $container_path"; }
+	trace chown "${SUDO_UID:-$(id -u)}:${SUDO_GID:-$(id -g)}" "$container_path" || { trace rm -f "$container_path"; die "Could not set ownership of $container_path"; }
 	trace cryptsetup luksOpen "$container_path" "$mapper_name" || { trace rm -f "$container_path"; die "Could not open LUKS volume at $container_path"; }
-	trace mkfs.ext4 -q -E root_owner=${SUDO_UID:-0}:${SUDO_GID:-0} "$mapper_path" || { trace rm -f "$container_path"; die "Could not format ext4 on the LUKS volume at $container_path"; }
+	trace mkfs.ext4 -q -E root_owner="${SUDO_UID:-$(id -u)}:${SUDO_GID:-$(id -g)}" "$mapper_path" || { trace rm -f "$container_path"; die "Could not format ext4 on the LUKS volume at $container_path"; }
 	echo "[+] Created new encrypted container at $container_path"
 }
 
