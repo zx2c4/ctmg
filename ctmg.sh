@@ -134,6 +134,7 @@ cmd_delete() {
 
 cmd_list() {
 	[[ $# -ne 0 ]] && die "Usage: $PROGRAM list"
+	# shellcheck disable=SC2155
 	local mount_points="$(sed -n "s:^/dev/mapper/${CT_MAPPER_PREFIX}[^ ]* \\([^ ]\\+\\).*:\\1:p" /proc/mounts)"
 	[[ -n $mount_points ]] && echo -e "$mount_points" && return 0
 	return 1
