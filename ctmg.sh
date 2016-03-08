@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2015 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+# Copyright (c) 2015-2016 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
 # Copyright (c) 2014 Laurent Ghigonis <laurent@gouloum.fr>.
 #
 # Permission to use, copy, modify, and distribute this software for any
