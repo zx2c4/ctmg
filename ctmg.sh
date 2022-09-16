@@ -39,7 +39,7 @@ unwind() {
 	[[ $keep_open -eq 1 ]] && return
 
 	for i in {1..5}; do
-		echo -e "$(cut -d ' ' -f 2 /proc/mounts)" | fgrep -wq "$mount_path" || break
+		echo -e "$(cut -d ' ' -f 2 /proc/mounts)" | grep -Fwq "$mount_path" || break
 		trace umount "$mount_path" && break
 		trace sleep $i
 	done
@@ -117,7 +117,7 @@ cmd_close() {
 	[[ $# -ne 1 ]] && die "Usage: $PROGRAM close container_path"
 	initialize_container "$1"
 	keep_open=1
-	echo -e "$(cut -d ' ' -f 2 /proc/mounts)" | fgrep -wq "$mount_path" && { trace umount "$mount_path" || die "Could not unmount $mount_path"; }
+	echo -e "$(cut -d ' ' -f 2 /proc/mounts)" | grep -Fwq "$mount_path" && { trace umount "$mount_path" || die "Could not unmount $mount_path"; }
 	trace cryptsetup luksClose "$mapper_name"
 	[[ $? -eq 0 || $? -eq 4 ]] || die "Could not close LUKS mapping $mapper_name"
 	[[ -d $mount_path ]] && { trace rmdir "$mount_path" || echo "[-] Non-fatal: could not remove $mount_path directory" >&2; }
